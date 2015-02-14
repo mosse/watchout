@@ -1,9 +1,17 @@
 // start slingin' some d3 here.
 
 
-var height = 500;
-var width = 750;
-var numEnemies = 30;
+var boardY = 500;
+var boardX = 750;
+var numEnemies = 2;
+var asteroidDimension = 20;
+var playerHeight = 37.5;
+var playerWidth = 50;
+var gameStats = {
+  score: 0;
+  highScore: 0;
+  collisions: 0;
+};
 
 var updateEnemies = function(numEnemies) {
   var result = [];
@@ -11,8 +19,8 @@ var updateEnemies = function(numEnemies) {
   for ( var i = 0; i < numEnemies; i++ ) {
     var enemy = {
       id: i,
-      top: randomPosition(height),
-      left: randomPosition(width)
+      top: randomPosition(boardY),
+      left: randomPosition(boardX)
     };
 
     result.push(enemy);
@@ -25,30 +33,37 @@ var randomPosition = function(limit) {
   return Math.floor(Math.random() * limit);
 };
 
+var resetScore = function() {
+  // reset the score
+  // check against high score
+};
+
+// init player in middle of board
 var player = [{
   id: player,
-  top: height / 2,
-  left: width / 2
+  top: boardY / 2,
+  left: boardX / 2
 }]
 
 var enemies = updateEnemies(numEnemies);
 var asteroids = d3.select('.gameboard').selectAll('.asteroid').data(enemies);
-
 var spaceship = d3.select('.gameboard').selectAll('.player').data(player);
 
 var drag = d3.behavior.drag()
   .on('drag', function() {
-    if ( d3.event.y > 0 && d3.event.y < height ) {
+    if ( d3.event.y > 0 && d3.event.y < boardY ) {
         spaceship
+          // .attr('top', d3.event.y)
           .style({
-            top: function(){ return d3.event.y + 'px'},
-          })
+            top: function(){ return d3.event.y + 'px'}
+          });
     }
-    if ( d3.event.x > 0 && d3.event.x < width ) {
+    if ( d3.event.x > 0 && d3.event.x < boardX ) {
         spaceship
+          // .attr('left', d3.event.x)
           .style({
             left: function(){ return d3.event.x + 'px'}
-          })
+          });
     }
 });
 
@@ -73,10 +88,10 @@ setInterval(function(){
     .duration(2000)
     .style({
       top: function(d){
-        return randomPosition(height) + 'px';
+        return randomPosition(boardY) + 'px';
       },
       left: function(d){
-        return randomPosition(width) + 'px';
+        return randomPosition(boardX) + 'px';
       }
   });
 }, 2000);
@@ -106,18 +121,29 @@ spaceship
 
 
 setInterval(function(){
-  // for our asteroids
-  // check position bounding box against spaceship box
-  // if position + width > position of ship
-  //
-  // if x + width > target.x || x > target.x + target.width
-  // AND
-  // if y + width > target.y || y > target.y + target.width
-  //
   var asteroidDivs = document.getElementsByClassName('asteroid');
   var playerDiv = document.getElementsByClassName('player');
-  for ( var = i; i < asteroidDivs.length; i++) {
+  // increment score counter
 
+  for ( var i = 0; i < asteroidDivs.length; i++) {
+    // console.log('i' + i);
+    var asteroidX = parseInt(asteroidDivs[i].style.left);
+    var asteroidY = parseInt(asteroidDivs[i].style.top);
+    var playerX = parseInt(playerDiv[0].style.left);
+    var playerY = parseInt(playerDiv[0].style.top);
+
+    if ( playerX > asteroidX - playerWidth &&
+          playerX < asteroidX + asteroidDimension &&
+          playerY > asteroidY - playerHeight &&
+          playerY < asteroidY + asteroidDimension ) {
+      playerDiv[0].style.border = "thin solid yellow";
+      console.log('collision with:  ' + i);
+
+      // call reset score fn
+
+    } else {
+      playerDiv[0].style.border = "thin solid red";
+    }
   }
-}, 200);
+}, 100);
 

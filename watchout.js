@@ -33,7 +33,24 @@ var player = [{
 
 var enemies = updateEnemies(numEnemies);
 var asteroids = d3.select('.gameboard').selectAll('.asteroid').data(enemies);
+
 var spaceship = d3.select('.gameboard').selectAll('.player').data(player);
+
+var drag = d3.behavior.drag()
+  .on('drag', function() {
+    if ( d3.event.y > 0 && d3.event.y < height ) {
+        spaceship
+          .style({
+            top: function(){ return d3.event.y + 'px'},
+          })
+    }
+    if ( d3.event.x > 0 && d3.event.x < width ) {
+        spaceship
+          .style({
+            left: function(){ return d3.event.x + 'px'}
+          })
+    }
+});
 
 // place asteroids (ENTER)
 asteroids
@@ -53,7 +70,6 @@ asteroids
 setInterval(function(){
   asteroids
     .transition()
-    // .delay(2000)
     .duration(2000)
     .style({
       top: function(d){
@@ -65,6 +81,7 @@ setInterval(function(){
   });
 }, 2000);
 
+// place spaceship
 spaceship
   .enter()
   .append('div')
@@ -76,6 +93,8 @@ spaceship
       return d.left + 'px';
     }
   })
-  .attr('class', 'player');
+  .attr('class', 'player')
+  .call(drag);
 
-  // selection.style('top', function(d){ return randomPosition(); })
+// check for collision
+

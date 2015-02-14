@@ -97,4 +97,27 @@ spaceship
   .call(drag);
 
 // check for collision
+  // this is an iterator
+  // compare  height of our asteroid to the height of ship
+  // compare width, too
+  // find length of the hypotenuse of these
+  // (square root of x*x + y*y)
+  // if the length = < radius of spaceship, then collision
+
+
+setInterval(function(){
+  // for our asteroids
+  // check position bounding box against spaceship box
+  // if position + width > position of ship
+  //
+  // if x + width > target.x || x > target.x + target.width
+  // AND
+  // if y + width > target.y || y > target.y + target.width
+  //
+  var asteroidDivs = document.getElementsByClassName('asteroid');
+  var playerDiv = document.getElementsByClassName('player');
+  for ( var = i; i < asteroidDivs.length; i++) {
+
+  }
+}, 200);
 

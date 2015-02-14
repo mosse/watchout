@@ -9,6 +9,7 @@ Feel free to use it if you like. */
   height: 500px;
   width: 750px;
   border: solid thin gray;
+  padding: 25px;
 }
 
 .asteroid {

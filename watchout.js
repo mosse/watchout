@@ -1,53 +1,65 @@
 // start slingin' some d3 here.
 
 
+var height = 500;
+var width = 750;
+var numEnemies = 3;
 
-// for asteroids n, generate an array
-// for each i until n - 1, push random tuples
-var initPositions = function(n) {
-  var array = [];
+var updateEnemies = function(numEnemies) {
+  var result = [];
 
-  for ( var i = 0; i < n; i++ ) {
+  for ( var i = 0; i < numEnemies; i++ ) {
     var enemy = {
       id: i,
-      top: randomPosition(),
-      left: randomPosition()
+      top: randomPosition(height),
+      left: randomPosition(width)
     };
 
-    array.push(enemy);
+    result.push(enemy);
   }
 
-  return array;
+  return result;
 };
 
-var randomPosition = function() {
-  return Math.floor(Math.random() * 100);
+var randomPosition = function(limit) {
+  return Math.floor(Math.random() * limit);
 };
 
-var positions = initPositions(1);
+var enemies = updateEnemies(numEnemies);
+var asteroids = d3.select('.gameboard').selectAll('.asteroid').data(enemies);
 
 // place asteroids (ENTER)
-d3.select('.gameboard')
-  .selectAll('.asteroid')
-  .data(positions)
+asteroids
   .enter()
   .append('div')
-  .style('top', function(d){
-    return d.top + '%';
-  })
-  .style('left', function(d){
-    return d.left + '%';
+  .style({
+    top: function(d){
+      return d.top + 'px';
+    },
+    left: function(d){
+      return d.left + 'px';
+    }
   })
   .attr('class', 'asteroid');
 
-// make them move
-d3.selectAll('.asteroid')
-  // .data(positions)
-  .transition()
-  .delay(2000)
-  .duration(2000)
-  .style('top', '0')
-  .style('left', '0');
+// update enemy positions
+// enemies = updateEnemies(numEnemies);
+
+// make them move (TRANSITION)
+setInterval(function(){
+  asteroids
+    .transition()
+    .delay(2000)
+    .duration(2000)
+    .style({
+      top: function(d){
+        return randomPosition(height) + 'px';
+      },
+      left: function(d){
+        return randomPosition(width) + 'px';
+      }
+  });
+}, 2000);
 
 
   // selection.style('top', function(d){ return randomPosition(); })

@@ -4,6 +4,12 @@
 Feel free to use it if you like. */
 
 
+.gameboard {
+  position: relative;
+  height: 500px;
+  width: 750px;
+  border: solid thin gray;
+}
 
 .asteroid {
   background-image: url("asteroid.png");
